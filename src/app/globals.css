@@ -1,0 +1,122 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  Estilo deportivo clásico:
+  - Verde césped oscuro como dominante
+  - Dorado trofeo como acento
+  - Tipografía: Bebas Neue (display, condensada) + Source Sans 3 (cuerpo)
+  - Detalles tipo álbum Panini: bordes dorados, viñetas con cinta, líneas finas
+*/
+
+@layer base {
+  :root {
+    --color-bg: #0c1f0c;
+    --color-surface: #173817;
+    --color-surface-2: #1c461c;
+    --color-border: #2a6e2a;
+    --color-text: #f0f7f0;
+    --color-muted: #b8ddb8;
+    --color-accent: #d8932f;
+    --color-accent-soft: #f3e1b3;
+  }
+
+  html,
+  body {
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-body), system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  .display {
+    font-family: var(--font-display), serif;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  /* Texturilla sutil de césped en el fondo */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      repeating-linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.012) 0px,
+        rgba(255, 255, 255, 0.012) 80px,
+        transparent 80px,
+        transparent 160px
+      ),
+      radial-gradient(
+        ellipse at top,
+        rgba(58, 136, 58, 0.15) 0%,
+        transparent 60%
+      );
+  }
+
+  /* Detalle dorado para separadores tipo cinta de trofeo */
+  .ribbon-divider {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--color-accent) 20%,
+      var(--color-accent) 80%,
+      transparent
+    );
+    height: 1px;
+  }
+}
+
+@layer components {
+  .panini-card {
+    @apply relative bg-pitch-900 border border-pitch-700 rounded-sm;
+    box-shadow:
+      0 1px 0 rgba(216, 147, 47, 0.1) inset,
+      0 0 0 1px rgba(216, 147, 47, 0.05);
+  }
+
+  .panini-card-accent {
+    @apply relative bg-pitch-900 rounded-sm;
+    background-image:
+      linear-gradient(var(--color-surface), var(--color-surface)),
+      linear-gradient(135deg, var(--color-accent), #9e5d1f);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    border: 1px solid transparent;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 font-display
+      uppercase tracking-wider text-pitch-950 bg-trophy-400
+      hover:bg-trophy-300 transition-colors rounded-sm
+      shadow-[0_2px_0_0_rgba(126,73,32,1)] hover:shadow-[0_1px_0_0_rgba(126,73,32,1)]
+      hover:translate-y-[1px] active:translate-y-[2px] active:shadow-none;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3
+      font-display uppercase tracking-wider text-trophy-300
+      border border-trophy-700 hover:border-trophy-400 hover:text-trophy-200
+      transition-colors rounded-sm;
+  }
+
+  .tag {
+    @apply inline-flex items-center gap-1.5 px-2 py-0.5 text-xs font-mono
+      uppercase tracking-wide bg-pitch-800 border border-pitch-700 rounded-sm
+      text-pitch-200;
+  }
+
+  .tag-accent {
+    @apply inline-flex items-center gap-1.5 px-2 py-0.5 text-xs font-mono
+      uppercase tracking-wide bg-trophy-950 border border-trophy-700 rounded-sm
+      text-trophy-300;
+  }
+}
