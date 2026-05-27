@@ -2,12 +2,12 @@ import Link from 'next/link';
 import { PublicHeader } from '@/components/PublicHeader';
 import { getAllAdminMatches, type AdminMatch } from '@/lib/queries-admin';
 import { formatDayHeading, formatTime, madridDayKey } from '@/lib/dates';
-import { stageLabel } from '@/lib/stages';
+import { stageLabelEu } from '@/lib/stages';
 import type { Match } from '@/db/schema';
 import { cn } from '@/lib/cn';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Partidos · Porra Mundial 2026' };
+export const metadata = { title: 'Partidak · Porra Mundial 2026' };
 
 type Stage = Match['stage'];
 
@@ -15,21 +15,21 @@ const UPCOMING_DAYS = 7;
 const LIVE_WINDOW_MS = 2 * 60 * 60 * 1000; // 2h
 
 const PRIMARY_FILTERS = [
-  { key: 'proximos', label: 'Próximos' },
-  { key: 'hoy', label: 'Hoy' },
-  { key: 'jugados', label: 'Jugados' },
-  { key: 'todos', label: 'Todos' },
+  { key: 'proximos', label: 'Hurrengoak' },
+  { key: 'hoy', label: 'Gaur' },
+  { key: 'jugados', label: 'Jokatuak' },
+  { key: 'todos', label: 'Denak' },
 ] as const;
 type PrimaryFilter = (typeof PRIMARY_FILTERS)[number]['key'];
 
 const FASE_CHIPS: { stage: Stage; label: string }[] = [
-  { stage: 'group', label: 'Grupos' },
-  { stage: 'round_of_32', label: '16avos' },
-  { stage: 'round_of_16', label: 'Octavos' },
-  { stage: 'quarter_final', label: 'Cuartos' },
-  { stage: 'semi_final', label: 'Semis' },
-  { stage: 'third_place', label: '3er puesto' },
-  { stage: 'final', label: 'Final' },
+  { stage: 'group', label: 'Multzoak' },
+  { stage: 'round_of_32', label: '16renak' },
+  { stage: 'round_of_16', label: '8renak' },
+  { stage: 'quarter_final', label: 'Laurdenak' },
+  { stage: 'semi_final', label: 'Finalerdiak' },
+  { stage: 'third_place', label: '3. postua' },
+  { stage: 'final', label: 'Finala' },
 ];
 const VALID_STAGES = new Set<string>(FASE_CHIPS.map((f) => f.stage));
 
@@ -78,9 +78,9 @@ export default async function PartidosPage({
 
       <div className="max-w-4xl mx-auto px-6 py-10">
         <div className="mb-6">
-          <h1 className="font-display text-trophy-50 text-5xl sm:text-6xl">Partidos</h1>
+          <h1 className="font-display text-trophy-50 text-5xl sm:text-6xl">Partidak</h1>
           <p className="text-pitch-200 mt-2">
-            Calendario completo del Mundial 2026. Horarios en hora peninsular española.
+            Mundial 2026ko egutegi osoa. Ordutegiak Espainiako penintsulako orduan.
           </p>
         </div>
 
@@ -99,7 +99,7 @@ export default async function PartidosPage({
         {/* Filtro por fase */}
         <div className="flex flex-wrap items-center gap-2 mb-8">
           <span className="font-mono text-[11px] uppercase tracking-wider text-pitch-400 mr-1">
-            Por fase
+            Faseka
           </span>
           {FASE_CHIPS.map((f) => (
             <FilterChip
@@ -122,7 +122,7 @@ export default async function PartidosPage({
               <section key={key}>
                 <div className="flex items-center gap-3 mb-3">
                   <h2 className="font-display text-trophy-300 text-sm tracking-widest uppercase">
-                    {matches[0].kickoff ? formatDayHeading(matches[0].kickoff) : 'Sin fecha'}
+                    {matches[0].kickoff ? formatDayHeading(matches[0].kickoff, 'eu') : 'Datarik gabe'}
                   </h2>
                   <div className="flex-1 h-px bg-pitch-800" />
                 </div>
@@ -179,8 +179,8 @@ function MatchCard({ match, now }: { match: AdminMatch; now: Date }) {
 
   const tag =
     match.stage === 'group' && match.groupCode
-      ? `${stageLabel(match.stage)} · G.${match.groupCode}`
-      : stageLabel(match.stage);
+      ? `${match.groupCode} multzoa`
+      : stageLabelEu(match.stage);
 
   return (
     <article className="panini-card p-4">
@@ -191,12 +191,12 @@ function MatchCard({ match, now }: { match: AdminMatch; now: Date }) {
         </span>
         <span className="flex items-center gap-2 shrink-0">
           {live && (
-            <span className="tag-accent text-[10px] animate-pulse" aria-label="Partido en juego">
-              ● En juego
+            <span className="tag-accent text-[10px] animate-pulse" aria-label="Partida jokoan">
+              ● Jokoan
             </span>
           )}
           <span className="font-mono text-xs text-pitch-300">
-            {match.kickoff ? formatTime(match.kickoff) : '—'}
+            {match.kickoff ? formatTime(match.kickoff, 'eu') : '—'}
           </span>
         </span>
       </div>
@@ -315,9 +315,9 @@ function groupByDay(
 }
 
 function emptyMessage(fase: Stage | null, filter: PrimaryFilter): string {
-  if (fase) return 'No hay partidos en esta fase.';
-  if (filter === 'hoy') return 'Hoy no se juega ningún partido.';
-  if (filter === 'jugados') return 'Aún no se ha jugado ningún partido.';
-  if (filter === 'proximos') return 'No hay partidos en los próximos 7 días.';
-  return 'No hay partidos.';
+  if (fase) return 'Ez dago partidarik fase honetan.';
+  if (filter === 'hoy') return 'Gaur ez da partidarik jokatzen.';
+  if (filter === 'jugados') return 'Oraindik ez da partidarik jokatu.';
+  if (filter === 'proximos') return 'Ez dago partidarik hurrengo 7 egunetan.';
+  return 'Ez dago partidarik.';
 }

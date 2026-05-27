@@ -3,7 +3,7 @@ import { getScorersForAdmin, type AdminScorer } from '@/lib/queries-admin';
 import { cn } from '@/lib/cn';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Goleadores · Porra Mundial 2026' };
+export const metadata = { title: 'Goleatzaileak · Porra Mundial 2026' };
 
 export default async function GoleadoresPage() {
   const scorers = await getScorersForAdmin();
@@ -25,9 +25,9 @@ export default async function GoleadoresPage() {
 
       <div className="max-w-4xl mx-auto px-6 py-10">
         <div className="mb-8">
-          <h1 className="font-display text-trophy-50 text-5xl sm:text-6xl">Goleadores</h1>
+          <h1 className="font-display text-trophy-50 text-5xl sm:text-6xl">Goleatzaileak</h1>
           <p className="text-pitch-200 mt-2">
-            Máximos goleadores del torneo y las apuestas a Bota de Oro de cada porra.
+            Txapelketako goleatzaile nagusiak eta porra bakoitzaren Urrezko Bota apustuak.
           </p>
         </div>
 
@@ -35,14 +35,14 @@ export default async function GoleadoresPage() {
         <section className="mb-12">
           <div className="flex items-center gap-3 mb-3">
             <h2 className="font-display text-trophy-300 text-sm tracking-widest uppercase">
-              Pichichi del Mundial
+              Mundialeko Pitxitxia
             </h2>
             <div className="flex-1 h-px bg-pitch-800" />
           </div>
 
           {conGoles.length === 0 ? (
             <div className="panini-card p-8 text-center text-pitch-300 text-sm">
-              Aún no se han registrado goles.
+              Oraindik ez da golik erregistratu.
             </div>
           ) : (
             <div className="panini-card overflow-hidden">
@@ -50,8 +50,8 @@ export default async function GoleadoresPage() {
                 <thead>
                   <tr className="border-b border-pitch-700 text-left">
                     <Th className="w-12 text-center">#</Th>
-                    <Th>Jugador</Th>
-                    <Th className="text-right">Goles</Th>
+                    <Th>Jokalaria</Th>
+                    <Th className="text-right">Golak</Th>
                   </tr>
                 </thead>
                 <tbody>
@@ -68,26 +68,26 @@ export default async function GoleadoresPage() {
         <section>
           <div className="flex items-center gap-3 mb-3">
             <h2 className="font-display text-trophy-300 text-sm tracking-widest uppercase">
-              Apuestas de las porras
+              Porren apustuak
             </h2>
             <div className="flex-1 h-px bg-pitch-800" />
           </div>
           <p className="text-pitch-300 text-sm mb-4">
-            Candidatos a Bota de Oro elegidos por al menos una porra, con sus goles actuales.
+            Gutxienez porra batek aukeratutako Urrezko Bota hautagaiak, gaur egungo golekin.
           </p>
 
           {elegidos.length === 0 ? (
             <div className="panini-card p-8 text-center text-pitch-300 text-sm">
-              Todavía no hay porras con goleador elegido.
+              Oraindik ez dago goleatzailea aukeratuta duen porrarik.
             </div>
           ) : (
             <div className="panini-card overflow-hidden">
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-pitch-700 text-left">
-                    <Th>Jugador</Th>
-                    <Th className="text-center">Goles</Th>
-                    <Th className="text-right">Porras</Th>
+                    <Th>Jokalaria</Th>
+                    <Th className="text-center">Golak</Th>
+                    <Th className="text-right">Porrak</Th>
                   </tr>
                 </thead>
                 <tbody>
@@ -150,13 +150,13 @@ function PlayerCell({ scorer }: { scorer: AdminScorer }) {
           <span className="font-display text-pitch-50 text-base leading-tight truncate">
             {scorer.name}
           </span>
-          {scorer.isGoldenBoot && <span className="tag-accent text-[10px]">Bota de Oro</span>}
+          {scorer.isGoldenBoot && <span className="tag-accent text-[10px]">Urrezko Bota</span>}
           {scorer.isCustom && !scorer.isGoldenBoot && (
-            <span className="tag text-[10px]">Custom</span>
+            <span className="tag text-[10px]">Librea</span>
           )}
         </span>
         <span className="block text-pitch-300 text-xs mt-0.5">
-          {scorer.teamName ?? 'Sin equipo'}
+          {scorer.teamName ?? 'Talderik gabe'}
         </span>
       </span>
     </span>

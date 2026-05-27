@@ -4,17 +4,17 @@ import { cn } from '@/lib/cn';
 type Section = 'clasificacion' | 'partidos' | 'grupos' | 'goleadores';
 
 const LINKS: { href: string; label: string; key: Section }[] = [
-  { href: '/clasificacion', label: 'Clasificación', key: 'clasificacion' },
-  { href: '/partidos', label: 'Partidos', key: 'partidos' },
-  { href: '/grupos', label: 'Grupos', key: 'grupos' },
-  { href: '/goleadores', label: 'Goleadores', key: 'goleadores' },
+  { href: '/clasificacion', label: 'Sailkapena', key: 'clasificacion' },
+  { href: '/partidos', label: 'Partidak', key: 'partidos' },
+  { href: '/grupos', label: 'Multzoak', key: 'grupos' },
+  { href: '/goleadores', label: 'Goleatzaileak', key: 'goleadores' },
 ];
 
 export function PublicHeader({ active }: { active?: Section }) {
   return (
     <header className="border-b border-pitch-800/50 relative z-10">
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
-        <Link href="/" className="flex items-center gap-2 group shrink-0" aria-label="Inicio">
+        <Link href="/" className="flex items-center gap-2 group shrink-0" aria-label="Hasiera">
           <TrophyMark />
           <span className="font-display text-trophy-50 text-lg leading-none tracking-wider group-hover:text-trophy-200 transition-colors hidden sm:inline">
             La Porra <span className="text-trophy-300">2026</span>

@@ -3,7 +3,7 @@ import { getGroupStandings, type GroupStanding, type GroupStandingRow } from '@/
 import { cn } from '@/lib/cn';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Grupos · Porra Mundial 2026' };
+export const metadata = { title: 'Multzoak · Porra Mundial 2026' };
 
 export default async function GruposPage() {
   const groups = await getGroupStandings();
@@ -14,11 +14,11 @@ export default async function GruposPage() {
 
       <div className="max-w-6xl mx-auto px-6 py-10">
         <div className="mb-8">
-          <h1 className="font-display text-trophy-50 text-5xl sm:text-6xl">Grupos</h1>
+          <h1 className="font-display text-trophy-50 text-5xl sm:text-6xl">Multzoak</h1>
           <p className="text-pitch-200 mt-2">
-            Clasificación de cada grupo, calculada con los resultados (3 puntos por victoria,
-            1 por empate). Cuando un grupo se cierra, el <span className="text-trophy-300">1º y 2º</span>{' '}
-            quedan resaltados y los eliminados atenuados.
+            Multzo bakoitzaren sailkapena, emaitzekin kalkulatua (3 puntu garaipeneko,
+            1 berdinketako). Multzo bat ixten denean, <span className="text-trophy-300">1.a eta 2.a</span>{' '}
+            nabarmenduta agertzen dira, eta kanporatuak ilunduta.
           </p>
         </div>
 
@@ -44,15 +44,15 @@ function GroupCard({ group }: { group: GroupStanding }) {
   return (
     <div className="panini-card p-4">
       <div className="flex items-center justify-between mb-3">
-        <h2 className="font-display text-trophy-100 text-2xl">Grupo {group.groupCode}</h2>
-        {group.closed && <span className="tag-accent">Cerrado</span>}
+        <h2 className="font-display text-trophy-100 text-2xl">{group.groupCode} multzoa</h2>
+        {group.closed && <span className="tag-accent">Itxita</span>}
       </div>
 
       <table className="w-full text-sm">
         <thead>
           <tr className="text-pitch-300 border-b border-pitch-700">
             <Th className="w-6 text-left">#</Th>
-            <Th className="text-left">Equipo</Th>
+            <Th className="text-left">Taldea</Th>
             <Th>PJ</Th>
             <Th>G</Th>
             <Th>E</Th>

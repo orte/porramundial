@@ -52,10 +52,10 @@ export default async function PorraDetailPage({ params, searchParams }: Props) {
               href={`/porra/${id}`}
               className="font-display text-trophy-300 hover:text-trophy-200 tracking-widest text-sm transition-colors"
             >
-              ← Cancelar edición
+              ← Utzi edizioa
             </Link>
             <p className="font-display tracking-widest text-pitch-300 text-xs">
-              Editando porra #{id}
+              #{id} porra editatzen
             </p>
           </div>
         </header>
@@ -81,8 +81,8 @@ export default async function PorraDetailPage({ params, searchParams }: Props) {
   return (
     <main className="relative z-10 min-h-screen">
       {/* Toast si acabamos de crearla */}
-      {just === 'created' && <JustCreatedToast message="¡Porra creada con éxito! 🎉" />}
-      {just === 'updated' && <JustCreatedToast message="Porra actualizada ✓" />}
+      {just === 'created' && <JustCreatedToast message="Porra ondo sortu da! 🎉" />}
+      {just === 'updated' && <JustCreatedToast message="Porra eguneratuta ✓" />}
 
       <header className="border-b border-pitch-800/50">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -90,13 +90,13 @@ export default async function PorraDetailPage({ params, searchParams }: Props) {
             href="/"
             className="font-display text-trophy-300 hover:text-trophy-200 tracking-widest text-sm transition-colors"
           >
-            ← Inicio
+            ← Hasiera
           </Link>
           <Link
             href="/clasificacion"
             className="font-display tracking-widest text-pitch-200 hover:text-trophy-300 text-xs transition-colors"
           >
-            Clasificación →
+            Sailkapena →
           </Link>
         </div>
       </header>
@@ -107,29 +107,29 @@ export default async function PorraDetailPage({ params, searchParams }: Props) {
           <div className="flex items-center gap-2 mb-3">
             <span className="tag-accent">PORRA #{entry.id.toString().padStart(3, '0')}</span>
             {locked ? (
-              <span className="tag">BLOQUEADA</span>
+              <span className="tag">BLOKEATUTA</span>
             ) : (
-              <span className="tag">EDITABLE HASTA {formatDate(lockDate)}</span>
+              <span className="tag">EDITAGARRI {formatDate(lockDate)} ARTE</span>
             )}
           </div>
           <h1 className="font-display text-trophy-50 text-5xl sm:text-6xl leading-none mb-2">
             {entry.teamName}
           </h1>
           <p className="text-pitch-200 text-lg">
-            Manager: <span className="text-trophy-300 font-semibold">{entry.participantName}</span>
+            Kudeatzailea: <span className="text-trophy-300 font-semibold">{entry.participantName}</span>
           </p>
 
           <div className="mt-8 grid grid-cols-3 gap-4">
-            <Stat label="Puntos" value={formatPoints(entry.points)} accent />
-            <Stat label="Gastado" value={`${entry.totalSpent}M€`} />
-            <Stat label="Disponible" value={`${100 - entry.totalSpent}M€`} />
+            <Stat label="Puntuak" value={formatPoints(entry.points)} accent />
+            <Stat label="Gastatua" value={`${entry.totalSpent}M€`} />
+            <Stat label="Erabilgarri" value={`${100 - entry.totalSpent}M€`} />
           </div>
         </div>
 
         {/* Selecciones */}
         <section className="mb-6">
           <h2 className="font-display text-trophy-200 text-2xl mb-4">
-            Plantilla — 5 selecciones
+            Taldea — 5 selekzio
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
             {entry.teams.map((team) => (
@@ -139,7 +139,7 @@ export default async function PorraDetailPage({ params, searchParams }: Props) {
                   {team.name}
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <span className="tag text-[10px]">G.{team.groupCode}</span>
+                  <span className="tag text-[10px]">{team.groupCode} multzoa</span>
                   <span className="font-mono text-xs text-trophy-300">
                     {team.price}M€
                   </span>
@@ -152,7 +152,7 @@ export default async function PorraDetailPage({ params, searchParams }: Props) {
         {/* Bota de oro */}
         <section className="mb-8">
           <h2 className="font-display text-trophy-200 text-2xl mb-4">
-            Candidato a Bota de Oro
+            Urrezko Bota hautagaia
           </h2>
           <div className="panini-card p-5 flex items-center gap-4">
             <span className="text-4xl">
@@ -164,7 +164,7 @@ export default async function PorraDetailPage({ params, searchParams }: Props) {
               </p>
               <p className="text-pitch-300 text-sm mt-1">
                 {entry.goldenBoot.isCustom
-                  ? 'Elección libre · 1M€'
+                  ? 'Aukera librea · 1M€'
                   : `${entry.goldenBoot.teamName ?? ''} · ${entry.goldenBoot.price}M€`}
               </p>
             </div>
@@ -178,21 +178,21 @@ export default async function PorraDetailPage({ params, searchParams }: Props) {
         <div className="flex flex-wrap items-center gap-3">
           {canEdit && (
             <Link href={`/porra/${id}?edit=1`} className="btn-primary">
-              Editar porra
+              Editatu porra
             </Link>
           )}
           {locked && (
             <p className="text-pitch-300 text-sm font-mono">
-              Las porras se bloquearon al iniciar el Mundial. No se pueden editar.
+              Porrak Mundiala hastean blokeatu ziren. Ezin dira editatu.
             </p>
           )}
           {!isOwner && !locked && (
             <p className="text-pitch-300 text-sm font-mono">
-              Solo el dueño de esta porra (con el enlace original) puede editarla.
+              Porra honen jabeak soilik (jatorrizko estekarekin) edita dezake.
             </p>
           )}
           <Link href="/clasificacion" className="btn-ghost">
-            Ver clasificación
+            Ikusi sailkapena
           </Link>
         </div>
 
@@ -200,12 +200,12 @@ export default async function PorraDetailPage({ params, searchParams }: Props) {
         {isOwner && !locked && (
           <div className="mt-10 panini-card p-5">
             <p className="font-display text-trophy-300 text-xs tracking-widest mb-2">
-              GUARDA ESTE ENLACE
+              GORDE ESTEKA HAU
             </p>
             <p className="text-pitch-200 text-sm mb-3">
-              Este es el enlace privado a tu porra. Guárdalo si quieres editarla más
-              adelante (hasta el inicio del Mundial). Si quieres entrar desde otro
-              dispositivo, copia el enlace completo de abajo:
+              Hau da zure porraren esteka pribatua. Gorde ezazu geroago editatu nahi
+              baduzu (Mundiala hasi arte). Beste gailu batetik sartu nahi baduzu, kopiatu
+              beheko esteka osoa:
             </p>
             <code className="block bg-pitch-950 border border-pitch-700 rounded-sm px-3 py-2 text-xs text-trophy-200 font-mono break-all">
               /porra/{entry.id}?token={entry.editToken}
@@ -232,15 +232,15 @@ function Stat({ label, value, accent }: { label: string; value: string; accent?:
 
 function BreakdownSection({ breakdown }: { breakdown: PointsBreakdown }) {
   const lines = [
-    { label: 'Partidos de tus selecciones', value: breakdown.teamMatches },
-    { label: 'Posiciones de grupo (1º / 2º)', value: breakdown.groupPositions },
-    { label: 'Goles de tu goleador', value: breakdown.goldenBootGoals },
-    { label: 'Bota de Oro', value: breakdown.goldenBootWinner },
+    { label: 'Zure selekzioen partidak', value: breakdown.teamMatches },
+    { label: 'Multzoko postuak (1. / 2.)', value: breakdown.groupPositions },
+    { label: 'Zure goleatzailearen golak', value: breakdown.goldenBootGoals },
+    { label: 'Urrezko Bota', value: breakdown.goldenBootWinner },
   ].filter((l) => l.value !== 0);
 
   return (
     <section className="mb-8">
-      <h2 className="font-display text-trophy-200 text-2xl mb-4">Cómo has sumado</h2>
+      <h2 className="font-display text-trophy-200 text-2xl mb-4">Nola batu dituzun puntuak</h2>
       <div className="panini-card divide-y divide-pitch-800">
         {lines.map((l) => (
           <div key={l.label} className="flex items-center justify-between px-5 py-3">
@@ -251,7 +251,7 @@ function BreakdownSection({ breakdown }: { breakdown: PointsBreakdown }) {
           </div>
         ))}
         <div className="flex items-center justify-between px-5 py-3 bg-pitch-800/30">
-          <span className="font-display text-trophy-100 uppercase tracking-wider text-sm">Total</span>
+          <span className="font-display text-trophy-100 uppercase tracking-wider text-sm">Guztira</span>
           <span className="font-display text-trophy-100 text-2xl tabular-nums">
             {formatSigned(breakdown.total)}
           </span>
@@ -267,7 +267,7 @@ function formatPoints(n: number): string {
 }
 
 function formatDate(d: Date): string {
-  return new Intl.DateTimeFormat('es-ES', {
+  return new Intl.DateTimeFormat('eu', {
     day: '2-digit',
     month: 'short',
     hour: '2-digit',

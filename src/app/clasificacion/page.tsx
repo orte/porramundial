@@ -6,12 +6,12 @@ import {
   type StandingRow,
   type TournamentStatus,
 } from '@/lib/queries-public';
-import { stageLabel } from '@/lib/stages';
+import { stageLabelEu } from '@/lib/stages';
 import { formatPoints } from '@/lib/format';
 import { cn } from '@/lib/cn';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Clasificación · Porra Mundial 2026' };
+export const metadata = { title: 'Sailkapena · Porra Mundial 2026' };
 
 export default async function ClasificacionPage() {
   const [rows, status] = await Promise.all([getStandings(), getTournamentStatus()]);
@@ -23,16 +23,16 @@ export default async function ClasificacionPage() {
 
       <div className="max-w-4xl mx-auto px-6 py-10">
         <div className="mb-6">
-          <h1 className="font-display text-trophy-50 text-5xl sm:text-6xl">Clasificación</h1>
+          <h1 className="font-display text-trophy-50 text-5xl sm:text-6xl">Sailkapena</h1>
           <p className="text-pitch-200 mt-2">{statusLine(status)}</p>
         </div>
 
         {rows.length === 0 ? (
           <div className="panini-card p-10 text-center">
-            <p className="font-display text-2xl text-trophy-200 mb-3">Aún no hay porras</p>
-            <p className="text-pitch-300 mb-6">Sé el primero en participar y empieza la liguilla.</p>
+            <p className="font-display text-2xl text-trophy-200 mb-3">Oraindik ez dago porrarik</p>
+            <p className="text-pitch-300 mb-6">Izan zaitez parte hartzen lehena eta hasi lehia.</p>
             <Link href="/nueva-porra" className="btn-primary">
-              Crear la primera porra
+              Sortu lehen porra
             </Link>
           </div>
         ) : (
@@ -50,7 +50,7 @@ export default async function ClasificacionPage() {
                       Porra
                     </th>
                     <th className="font-mono text-xs uppercase tracking-widest text-pitch-300 px-4 py-3 hidden sm:table-cell">
-                      Bota de oro
+                      Urrezko Bota
                     </th>
                     <th className="font-mono text-xs uppercase tracking-widest text-pitch-300 px-4 py-3 text-right">
                       Pts
@@ -66,7 +66,7 @@ export default async function ClasificacionPage() {
             </div>
 
             <p className="text-pitch-400 text-xs mt-4 font-mono">
-              Empates a puntos se desempatan por menos presupuesto gastado.
+              Puntu-berdinketak aurrekontu gutxiago gastatuta hausten dira.
             </p>
           </>
         )}
@@ -82,7 +82,7 @@ function LeaderCard({ leader }: { leader: StandingRow }) {
         <TrophyMark />
       </div>
       <Link href={`/porra/${leader.id}`} className="flex-1 min-w-0 group">
-        <p className="font-mono text-xs uppercase tracking-widest text-trophy-300">Líder</p>
+        <p className="font-mono text-xs uppercase tracking-widest text-trophy-300">Liderra</p>
         <p className="font-display text-trophy-50 text-2xl sm:text-3xl leading-none truncate group-hover:text-trophy-200 transition-colors">
           {leader.teamName}
         </p>
@@ -92,7 +92,7 @@ function LeaderCard({ leader }: { leader: StandingRow }) {
         <p className="font-display text-trophy-100 text-4xl sm:text-5xl leading-none tabular-nums">
           {formatPoints(leader.points)}
         </p>
-        <p className="font-mono text-[10px] uppercase tracking-widest text-trophy-700 mt-1">puntos</p>
+        <p className="font-mono text-[10px] uppercase tracking-widest text-trophy-700 mt-1">puntu</p>
       </div>
     </div>
   );
@@ -134,12 +134,12 @@ function StandingTr({ row, position }: { row: StandingRow; position: number }) {
 }
 
 function statusLine(status: TournamentStatus): string {
-  if (status.finished) return 'Mundial finalizado · clasificación final';
+  if (status.finished) return 'Mundiala amaituta · azken sailkapena';
   if (status.matchesPlayed === 0) {
-    return 'El Mundial aún no ha empezado. Las puntuaciones se actualizan con cada resultado.';
+    return 'Mundiala oraindik ez da hasi. Puntuazioak emaitza bakoitzarekin eguneratzen dira.';
   }
-  const phase = status.currentStage ? stageLabel(status.currentStage) : '';
-  return `${phase ? `${phase} · ` : ''}${status.matchesPlayed}/${status.total} partidos jugados`;
+  const phase = status.currentStage ? stageLabelEu(status.currentStage) : '';
+  return `${phase ? `${phase} · ` : ''}${status.matchesPlayed}/${status.total} partida jokatuta`;
 }
 
 function TrophyMark() {

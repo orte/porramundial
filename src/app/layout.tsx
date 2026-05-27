@@ -23,7 +23,7 @@ const mono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: 'Porra Mundial 2026',
-  description: 'La porra del Mundial 2026 entre amigos',
+  description: '2026ko Munduko Kopako lagun arteko porra',
 };
 
 export default function RootLayout({
@@ -32,7 +32,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" className={`${display.variable} ${body.variable} ${mono.variable}`}>
+    <html lang="eu" className={`${display.variable} ${body.variable} ${mono.variable}`}>
       <body className="min-h-screen relative">{children}</body>
     </html>
   );
