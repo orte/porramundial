@@ -3,7 +3,9 @@ import { notFound } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { getEntryById } from '@/lib/queries-entry';
 import { getAllPlayers, getAllTeams } from '@/lib/queries';
+import { getEntryBreakdown, type PointsBreakdown } from '@/lib/queries-public';
 import { isLocked, getLockDate } from '@/lib/lock';
+import { formatSigned } from '@/lib/format';
 import { EntryWizard } from '@/components/EntryWizard';
 import { JustCreatedToast } from '@/components/JustCreatedToast';
 
@@ -72,6 +74,9 @@ export default async function PorraDetailPage({ params, searchParams }: Props) {
       </main>
     );
   }
+
+  // Desglose de puntos (solo si ya hay puntuación).
+  const breakdown = entry.points > 0 ? await getEntryBreakdown(id) : null;
 
   return (
     <main className="relative z-10 min-h-screen">
@@ -166,6 +171,9 @@ export default async function PorraDetailPage({ params, searchParams }: Props) {
           </div>
         </section>
 
+        {/* Desglose de puntos */}
+        {breakdown && <BreakdownSection breakdown={breakdown} />}
+
         {/* Acciones */}
         <div className="flex flex-wrap items-center gap-3">
           {canEdit && (
@@ -219,6 +227,37 @@ function Stat({ label, value, accent }: { label: string; value: string; accent?:
         {value}
       </p>
     </div>
+  );
+}
+
+function BreakdownSection({ breakdown }: { breakdown: PointsBreakdown }) {
+  const lines = [
+    { label: 'Partidos de tus selecciones', value: breakdown.teamMatches },
+    { label: 'Posiciones de grupo (1º / 2º)', value: breakdown.groupPositions },
+    { label: 'Goles de tu goleador', value: breakdown.goldenBootGoals },
+    { label: 'Bota de Oro', value: breakdown.goldenBootWinner },
+  ].filter((l) => l.value !== 0);
+
+  return (
+    <section className="mb-8">
+      <h2 className="font-display text-trophy-200 text-2xl mb-4">Cómo has sumado</h2>
+      <div className="panini-card divide-y divide-pitch-800">
+        {lines.map((l) => (
+          <div key={l.label} className="flex items-center justify-between px-5 py-3">
+            <span className="text-pitch-200 text-sm">{l.label}</span>
+            <span className="font-display text-trophy-300 text-lg tabular-nums">
+              {formatSigned(l.value)}
+            </span>
+          </div>
+        ))}
+        <div className="flex items-center justify-between px-5 py-3 bg-pitch-800/30">
+          <span className="font-display text-trophy-100 uppercase tracking-wider text-sm">Total</span>
+          <span className="font-display text-trophy-100 text-2xl tabular-nums">
+            {formatSigned(breakdown.total)}
+          </span>
+        </div>
+      </div>
+    </section>
   );
 }
 

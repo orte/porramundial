@@ -3,6 +3,10 @@ import { db } from '@/db';
 import { teams, entries, matches } from '@/db/schema';
 import { sql } from 'drizzle-orm';
 import { isLocked } from '@/lib/lock';
+import { getStandings, getRecentResults, type StandingRow } from '@/lib/queries-public';
+import type { AdminMatch } from '@/lib/queries-admin';
+import { formatPoints } from '@/lib/format';
+import { cn } from '@/lib/cn';
 
 // Indicamos a Next.js que esta página se renderiza dinámicamente
 // porque consulta la DB
@@ -30,11 +34,21 @@ type HomeProps = {
 export default async function HomePage({ searchParams }: HomeProps) {
   let stats = { teams: 0, entries: 0, matches: 0 };
   let locked = false;
+  let leader: StandingRow | null = null;
+  let recent: AdminMatch[] = [];
 
   // Si la DB aún no está poblada, evitamos romper la página
   try {
-    stats = await getHomeStats();
-    locked = await isLocked();
+    const [s, l, standings, recientes] = await Promise.all([
+      getHomeStats(),
+      isLocked(),
+      getStandings(),
+      getRecentResults(3),
+    ]);
+    stats = s;
+    locked = l;
+    leader = standings[0] ?? null;
+    recent = recientes;
   } catch (err) {
     console.error('Error cargando stats:', err);
   }
@@ -147,8 +161,20 @@ export default async function HomePage({ searchParams }: HomeProps) {
         <div className="ribbon-divider" />
       </div>
 
-      {/* ─── STATS ──────────────────────────────────────────────────── */}
+      {/* ─── STATS / EN VIVO ────────────────────────────────────────── */}
       <section className="max-w-6xl mx-auto px-6 py-12">
+        {(leader || recent.length > 0) && (
+          <div
+            className={cn(
+              'grid gap-6 mb-8',
+              leader && recent.length > 0 ? 'lg:grid-cols-2' : 'grid-cols-1',
+            )}
+          >
+            {leader && <LeaderMini leader={leader} />}
+            {recent.length > 0 && <RecentResults matches={recent} />}
+          </div>
+        )}
+
         <div className="grid grid-cols-3 gap-4">
           <StatCard label="Selecciones" value={stats.teams} suffix="/ 48" />
           <StatCard label="Partidos" value={stats.matches} suffix="/ 104" />
@@ -374,6 +400,101 @@ function ScoringLine({ pts, text }: { pts: string; text: string }) {
         {pts}
       </span>
       <span className="text-pitch-100 text-sm">{text}</span>
+    </div>
+  );
+}
+
+function LeaderMini({ leader }: { leader: StandingRow }) {
+  return (
+    <Link
+      href={`/porra/${leader.id}`}
+      className="panini-card-accent p-6 flex items-center gap-4 group"
+    >
+      <div className="w-12 h-12 rounded-full border-2 border-trophy-400 flex items-center justify-center shrink-0">
+        <TrophyMark />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="font-mono text-xs uppercase tracking-widest text-trophy-300">Líder actual</p>
+        <p className="font-display text-trophy-50 text-2xl leading-none truncate group-hover:text-trophy-200 transition-colors">
+          {leader.teamName}
+        </p>
+        <p className="text-pitch-200 text-sm mt-0.5">{leader.participantName}</p>
+      </div>
+      <div className="text-right shrink-0">
+        <p className="font-display text-trophy-100 text-4xl leading-none tabular-nums">
+          {formatPoints(leader.points)}
+        </p>
+        <p className="font-mono text-[10px] uppercase tracking-widest text-trophy-700 mt-1">pts</p>
+      </div>
+    </Link>
+  );
+}
+
+function RecentResults({ matches }: { matches: AdminMatch[] }) {
+  return (
+    <div className="panini-card p-5">
+      <div className="flex items-center gap-3 mb-4">
+        <h2 className="font-display text-trophy-300 text-sm tracking-widest uppercase">
+          Últimos resultados
+        </h2>
+        <div className="flex-1 h-px bg-pitch-800" />
+        <Link
+          href="/partidos?filter=jugados"
+          className="font-display text-pitch-300 hover:text-trophy-300 text-xs tracking-widest transition-colors"
+        >
+          Ver todos →
+        </Link>
+      </div>
+      <div className="space-y-3">
+        {matches.map((m) => (
+          <RecentRow key={m.id} match={m} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function RecentRow({ match }: { match: AdminMatch }) {
+  const aetpen = match.winMode === 'extra_time' || match.winMode === 'penalties';
+  const home = (aetpen ? match.homeGoalsAfterExtra : match.homeGoals) ?? 0;
+  const away = (aetpen ? match.awayGoalsAfterExtra : match.awayGoals) ?? 0;
+  const badge =
+    match.winMode === 'extra_time' ? 'AET' : match.winMode === 'penalties' ? 'PEN' : null;
+
+  return (
+    <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 text-sm">
+      <span className="flex items-center justify-end gap-2 text-right min-w-0">
+        <span
+          className={cn(
+            'font-display truncate',
+            match.winnerTeamId === match.home?.id ? 'text-trophy-100' : 'text-pitch-100',
+          )}
+        >
+          {match.home?.name ?? match.homePlaceholder ?? '¿?'}
+        </span>
+        <span className="shrink-0" aria-hidden>
+          {match.home?.flag ?? '⚽'}
+        </span>
+      </span>
+      <span className="flex flex-col items-center px-1">
+        <span className="font-display text-trophy-100 tabular-nums">
+          {home}<span className="text-pitch-500 mx-0.5">·</span>{away}
+        </span>
+        {badge && <span className="tag text-[8px] px-1 py-0 mt-0.5">{badge}</span>}
+      </span>
+      <span className="flex items-center gap-2 min-w-0">
+        <span className="shrink-0" aria-hidden>
+          {match.away?.flag ?? '⚽'}
+        </span>
+        <span
+          className={cn(
+            'font-display truncate',
+            match.winnerTeamId === match.away?.id ? 'text-trophy-100' : 'text-pitch-100',
+          )}
+        >
+          {match.away?.name ?? match.awayPlaceholder ?? '¿?'}
+        </span>
+      </span>
     </div>
   );
 }
