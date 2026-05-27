@@ -41,8 +41,8 @@ const THIRD_PLACE_POINTS = 1;
 const WORLD_CUP_POINTS = 4;
 const GROUP_FIRST_POINTS = 1;
 const GROUP_SECOND_POINTS = 0.5;
-const GOLDEN_BOOT_GOAL_POINTS = 3;
-const GOLDEN_BOOT_WINNER_POINTS = 4;
+export const GOLDEN_BOOT_GOAL_POINTS = 3;
+export const GOLDEN_BOOT_WINNER_POINTS = 4;
 
 // Cruces en los que ganar significa "avanzar" a la siguiente ronda.
 const ADVANCE_STAGES: ReadonlySet<Stage> = new Set<Stage>([
