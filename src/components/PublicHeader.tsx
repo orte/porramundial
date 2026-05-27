@@ -7,7 +7,7 @@ const LINKS: { href: string; label: string; key: Section }[] = [
   { href: '/clasificacion', label: 'Sailkapena', key: 'clasificacion' },
   { href: '/partidos', label: 'Partidak', key: 'partidos' },
   { href: '/grupos', label: 'Multzoak', key: 'grupos' },
-  { href: '/goleadores', label: 'Goleatzaileak', key: 'goleadores' },
+  { href: '/goleadores', label: 'Golegileak', key: 'goleadores' },
 ];
 
 export function PublicHeader({ active }: { active?: Section }) {

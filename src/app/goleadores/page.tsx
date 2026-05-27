@@ -3,7 +3,7 @@ import { getScorersForAdmin, type AdminScorer } from '@/lib/queries-admin';
 import { cn } from '@/lib/cn';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Goleatzaileak · Porra Mundial 2026' };
+export const metadata = { title: 'Golegileak · Porra Mundial 2026' };
 
 export default async function GoleadoresPage() {
   const scorers = await getScorersForAdmin();
@@ -25,9 +25,9 @@ export default async function GoleadoresPage() {
 
       <div className="max-w-4xl mx-auto px-6 py-10">
         <div className="mb-8">
-          <h1 className="font-display text-trophy-50 text-5xl sm:text-6xl">Goleatzaileak</h1>
+          <h1 className="font-display text-trophy-50 text-5xl sm:text-6xl">Golegileak</h1>
           <p className="text-pitch-200 mt-2">
-            Txapelketako goleatzaile nagusiak eta porra bakoitzaren Urrezko Bota apustuak.
+            Txapelketako golegile nagusiak eta porra bakoitzaren Urrezko Bota apustuak.
           </p>
         </div>
 
@@ -78,7 +78,7 @@ export default async function GoleadoresPage() {
 
           {elegidos.length === 0 ? (
             <div className="panini-card p-8 text-center text-pitch-300 text-sm">
-              Oraindik ez dago goleatzailea aukeratuta duen porrarik.
+              Oraindik ez dago golegilea aukeratuta duen porrarik.
             </div>
           ) : (
             <div className="panini-card overflow-hidden">

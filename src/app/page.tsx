@@ -96,7 +96,7 @@ export default async function HomePage({ searchParams }: HomeProps) {
               href="/goleadores"
               className="px-3 py-1.5 text-pitch-200 hover:text-trophy-300 transition-colors"
             >
-              Goleatzaileak
+              Golegileak
             </Link>
           </nav>
         </div>

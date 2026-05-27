@@ -102,7 +102,7 @@ export async function createEntry(input: EntryFormInput): Promise<ActionResult> 
   if (teamsCost > MAX_TEAMS_BUDGET) {
     return {
       ok: false,
-      error: `${teamsCost}M€ gastatu dituzu selekzioetan. Gehienez ${MAX_TEAMS_BUDGET}M€ izan daitezke (1M€ goleatzailearentzat gordetzen da).`,
+      error: `${teamsCost}M€ gastatu dituzu selekzioetan. Gehienez ${MAX_TEAMS_BUDGET}M€ izan daitezke (1M€ golegilearentzat gordetzen da).`,
     };
   }
 
@@ -233,7 +233,7 @@ export async function updateEntry(
   if (teamsCost > MAX_TEAMS_BUDGET) {
     return {
       ok: false,
-      error: `${teamsCost}M€ gastatu dituzu selekzioetan. Gehienez ${MAX_TEAMS_BUDGET}M€ izan daitezke (1M€ goleatzailearentzat gordetzen da).`,
+      error: `${teamsCost}M€ gastatu dituzu selekzioetan. Gehienez ${MAX_TEAMS_BUDGET}M€ izan daitezke (1M€ golegilearentzat gordetzen da).`,
     };
   }
 

@@ -234,7 +234,7 @@ function BreakdownSection({ breakdown }: { breakdown: PointsBreakdown }) {
   const lines = [
     { label: 'Zure selekzioen partidak', value: breakdown.teamMatches },
     { label: 'Multzoko postuak (1. / 2.)', value: breakdown.groupPositions },
-    { label: 'Zure goleatzailearen golak', value: breakdown.goldenBootGoals },
+    { label: 'Zure golegilearen golak', value: breakdown.goldenBootGoals },
     { label: 'Urrezko Bota', value: breakdown.goldenBootWinner },
   ].filter((l) => l.value !== 0);
 

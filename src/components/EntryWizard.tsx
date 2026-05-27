@@ -91,7 +91,7 @@ export function EntryWizard({ teams, players, initial }: Props) {
         team.price;
       if (newTeamsCost + reservedForPlayer > BUDGET) {
         setErrorMsg(
-          `Ez duzu nahikoa aurrekontu ${team.name} gehitzeko (${reservedForPlayer}M€ goleatzailearentzat gordetzen da).`,
+          `Ez duzu nahikoa aurrekontu ${team.name} gehitzeko (${reservedForPlayer}M€ golegilearentzat gordetzen da).`,
         );
         return prev;
       }
@@ -306,7 +306,7 @@ function BudgetBar({
       <div className="mt-3 flex items-center justify-between text-xs font-mono text-pitch-300 flex-wrap gap-2">
         <span>Taldeak: <span className="text-pitch-100">{teamsCost}M€</span></span>
         <span>
-          Goleatzailea:{' '}
+          Golegilea:{' '}
           <span className="text-pitch-100">
             {playerCost > 0 ? `${playerCost}M€` : `${MIN_GOLDEN_BOOT_COST}M€ gordeta`}
           </span>
@@ -493,14 +493,14 @@ function Step2({
             </h2>
             <p className="text-pitch-200 text-sm mt-1">
               {selectedTeamIds.length} / {TEAMS_TO_PICK} aukeratuta. Gehienez{' '}
-              {MAX_TEAMS_BUDGET}M€ gasta ditzakezu taldeetan (1M€ goleatzailearentzat
+              {MAX_TEAMS_BUDGET}M€ gasta ditzakezu taldeetan (1M€ golegilearentzat
               gordetzen da).
             </p>
           </div>
           <p className="font-mono text-xs text-pitch-300">
             {playerCost > 0
-              ? <>Goleatzailea: <span className="text-pitch-100">{playerCost}M€</span></>
-              : <>Goleatzailerako gordeta: <span className="text-pitch-100">{MIN_GOLDEN_BOOT_COST}M€</span></>}
+              ? <>Golegilea: <span className="text-pitch-100">{playerCost}M€</span></>
+              : <>Golegilerako gordeta: <span className="text-pitch-100">{MIN_GOLDEN_BOOT_COST}M€</span></>}
           </p>
         </div>
       </div>
@@ -627,7 +627,7 @@ function Step3({
           Aukeratu zure Urrezko Bota
         </h2>
         <p className="text-pitch-200 text-sm mt-1">
-          Mundialeko goleatzaile nagusi izango dela uste duzun jokalaria. 3 puntu
+          Mundialeko golegile nagusi izango dela uste duzun jokalaria. 3 puntu
           sartzen duen gol bakoitzeko, eta +4 Urrezko Bota irabazten badu.
         </p>
       </div>
