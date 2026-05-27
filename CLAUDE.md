@@ -166,7 +166,10 @@ npm run db:studio    # abrir Drizzle Studio (visualizador de DB)
 - ✅ **Fase 1**: Estructura, schema, seeds, página de inicio.
 - ✅ **Fase 2**: Wizard de creación, edición, vista de porra, clasificación
   básica. Incluye reserva de 1M€ para goleador.
-- 🚧 **Fase 3**: Panel admin.
+- ✅ **Fase 3**: Panel admin. Login por contraseña (cookie HMAC + middleware),
+  motor de puntuación (`src/lib/scoring.ts`) con recálculo desde cero, y gestión
+  de partidos, posiciones de grupo, cruces de eliminatorias, goleadores/Bota de
+  Oro, listado de porras y configuración del bloqueo.
 - 🚧 **Fase 4**: Vistas públicas detalladas.
 
 ## Cosas que NO hay que hacer
