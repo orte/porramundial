@@ -39,35 +39,35 @@ function validateInput(input: EntryFormInput): string | null {
   const team = input.teamName?.trim();
 
   if (!name || name.length < MIN_PARTICIPANT_NAME) {
-    return `El nombre debe tener al menos ${MIN_PARTICIPANT_NAME} caracteres.`;
+    return `Izenak gutxienez ${MIN_PARTICIPANT_NAME} karaktere izan behar ditu.`;
   }
   if (name.length > MAX_PARTICIPANT_NAME) {
-    return `El nombre no puede superar los ${MAX_PARTICIPANT_NAME} caracteres.`;
+    return `Izenak ezin ditu ${MAX_PARTICIPANT_NAME} karaktere baino gehiago izan.`;
   }
   if (!team || team.length < MIN_TEAM_NAME) {
-    return `El nombre del equipo debe tener al menos ${MIN_TEAM_NAME} caracteres.`;
+    return `Taldearen izenak gutxienez ${MIN_TEAM_NAME} karaktere izan behar ditu.`;
   }
   if (team.length > MAX_TEAM_NAME) {
-    return `El nombre del equipo no puede superar los ${MAX_TEAM_NAME} caracteres.`;
+    return `Taldearen izenak ezin ditu ${MAX_TEAM_NAME} karaktere baino gehiago izan.`;
   }
   if (!Array.isArray(input.selectedTeamIds) || input.selectedTeamIds.length !== TEAMS_TO_PICK) {
-    return `Tienes que elegir exactamente ${TEAMS_TO_PICK} selecciones.`;
+    return `Zehazki ${TEAMS_TO_PICK} selekzio aukeratu behar dituzu.`;
   }
   if (new Set(input.selectedTeamIds).size !== TEAMS_TO_PICK) {
-    return 'No puedes elegir la misma selección dos veces.';
+    return 'Ezin duzu selekzio bera bi aldiz aukeratu.';
   }
 
   if (input.goldenBootChoice.type === 'preset') {
     if (!Number.isInteger(input.goldenBootChoice.playerId)) {
-      return 'Candidato a Bota de Oro inválido.';
+      return 'Urrezko Bota hautagai baliogabea.';
     }
   } else {
     const custom = input.goldenBootChoice.name?.trim();
     if (!custom || custom.length < 2) {
-      return 'Escribe el nombre del jugador.';
+      return 'Idatzi jokalariaren izena.';
     }
     if (custom.length > MAX_CUSTOM_PLAYER_NAME) {
-      return `El nombre del jugador no puede superar los ${MAX_CUSTOM_PLAYER_NAME} caracteres.`;
+      return `Jokalariaren izenak ezin ditu ${MAX_CUSTOM_PLAYER_NAME} karaktere baino gehiago izan.`;
     }
   }
 
@@ -79,7 +79,7 @@ function validateInput(input: EntryFormInput): string | null {
 export async function createEntry(input: EntryFormInput): Promise<ActionResult> {
   // Bloqueo: si ya empezó el Mundial, no se aceptan nuevas porras.
   if (await isLocked()) {
-    return { ok: false, error: 'Las porras ya están bloqueadas: el Mundial ha comenzado.' };
+    return { ok: false, error: 'Porrak blokeatuta daude jada: Mundiala hasi da.' };
   }
 
   const validation = validateInput(input);
@@ -92,7 +92,7 @@ export async function createEntry(input: EntryFormInput): Promise<ActionResult> 
     .where(inArray(teams.id, input.selectedTeamIds));
 
   if (chosenTeams.length !== TEAMS_TO_PICK) {
-    return { ok: false, error: 'Alguna de las selecciones elegidas no existe.' };
+    return { ok: false, error: 'Aukeratutako selekzioren bat ez da existitzen.' };
   }
 
   const teamsCost = chosenTeams.reduce((acc, t) => acc + t.price, 0);
@@ -102,7 +102,7 @@ export async function createEntry(input: EntryFormInput): Promise<ActionResult> 
   if (teamsCost > MAX_TEAMS_BUDGET) {
     return {
       ok: false,
-      error: `Has gastado ${teamsCost}M€ en selecciones. El máximo es ${MAX_TEAMS_BUDGET}M€ (se reserva 1M€ para el goleador).`,
+      error: `${teamsCost}M€ gastatu dituzu selekzioetan. Gehienez ${MAX_TEAMS_BUDGET}M€ izan daitezke (1M€ golegilearentzat gordetzen da).`,
     };
   }
 
@@ -117,7 +117,7 @@ export async function createEntry(input: EntryFormInput): Promise<ActionResult> 
       .where(eq(players.id, input.goldenBootChoice.playerId))
       .limit(1);
     if (!player || player.isCustom) {
-      return { ok: false, error: 'El jugador seleccionado no es válido.' };
+      return { ok: false, error: 'Aukeratutako jokalaria ez da baliozkoa.' };
     }
     goldenBootPlayerId = player.id;
     playerCost = player.price;
@@ -135,7 +135,7 @@ export async function createEntry(input: EntryFormInput): Promise<ActionResult> 
       })
       .returning();
     if (!created) {
-      return { ok: false, error: 'No se pudo crear el jugador custom.' };
+      return { ok: false, error: 'Ezin izan da jokalari pertsonalizatua sortu.' };
     }
     goldenBootPlayerId = created.id;
   }
@@ -145,7 +145,7 @@ export async function createEntry(input: EntryFormInput): Promise<ActionResult> 
   if (totalSpent > BUDGET) {
     return {
       ok: false,
-      error: `Te has pasado del presupuesto: ${totalSpent}M€ de ${BUDGET}M€.`,
+      error: `Aurrekontua gainditu duzu: ${totalSpent}M€ / ${BUDGET}M€.`,
     };
   }
 
@@ -164,7 +164,7 @@ export async function createEntry(input: EntryFormInput): Promise<ActionResult> 
     .returning();
 
   if (!entry) {
-    return { ok: false, error: 'No se pudo crear la porra. Inténtalo de nuevo.' };
+    return { ok: false, error: 'Ezin izan da porra sortu. Saiatu berriro.' };
   }
 
   // Insertar las 5 selecciones
@@ -201,7 +201,7 @@ export async function updateEntry(
   input: EntryFormInput,
 ): Promise<ActionResult> {
   if (await isLocked()) {
-    return { ok: false, error: 'Las porras ya están bloqueadas: el Mundial ha comenzado.' };
+    return { ok: false, error: 'Porrak blokeatuta daude jada: Mundiala hasi da.' };
   }
 
   // Verificar que la porra existe y el token coincide
@@ -211,9 +211,9 @@ export async function updateEntry(
     .where(eq(entries.id, entryId))
     .limit(1);
 
-  if (!existing) return { ok: false, error: 'La porra no existe.' };
+  if (!existing) return { ok: false, error: 'Porra hau ez da existitzen.' };
   if (existing.editToken !== editToken) {
-    return { ok: false, error: 'No tienes permiso para editar esta porra.' };
+    return { ok: false, error: 'Ez duzu porra hau editatzeko baimenik.' };
   }
 
   const validation = validateInput(input);
@@ -225,7 +225,7 @@ export async function updateEntry(
     .where(inArray(teams.id, input.selectedTeamIds));
 
   if (chosenTeams.length !== TEAMS_TO_PICK) {
-    return { ok: false, error: 'Alguna de las selecciones elegidas no existe.' };
+    return { ok: false, error: 'Aukeratutako selekzioren bat ez da existitzen.' };
   }
 
   const teamsCost = chosenTeams.reduce((acc, t) => acc + t.price, 0);
@@ -233,7 +233,7 @@ export async function updateEntry(
   if (teamsCost > MAX_TEAMS_BUDGET) {
     return {
       ok: false,
-      error: `Has gastado ${teamsCost}M€ en selecciones. El máximo es ${MAX_TEAMS_BUDGET}M€ (se reserva 1M€ para el goleador).`,
+      error: `${teamsCost}M€ gastatu dituzu selekzioetan. Gehienez ${MAX_TEAMS_BUDGET}M€ izan daitezke (1M€ golegilearentzat gordetzen da).`,
     };
   }
 
@@ -247,7 +247,7 @@ export async function updateEntry(
       .where(eq(players.id, input.goldenBootChoice.playerId))
       .limit(1);
     if (!player || player.isCustom) {
-      return { ok: false, error: 'El jugador seleccionado no es válido.' };
+      return { ok: false, error: 'Aukeratutako jokalaria ez da baliozkoa.' };
     }
     goldenBootPlayerId = player.id;
     playerCost = player.price;

@@ -26,7 +26,10 @@
   body {
     background: var(--color-bg);
     color: var(--color-text);
-    font-family: var(--font-body), system-ui, sans-serif;
+    /* "Twemoji Country Flags" va primera para que las banderas se rendericen
+       con Twemoji en navegadores sin glifos nativos (Windows/Firefox). Para el
+       resto del texto cae a las fuentes de siempre, así que no cambia el diseño. */
+    font-family: 'Twemoji Country Flags', var(--font-body), system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }

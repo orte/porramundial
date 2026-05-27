@@ -22,10 +22,10 @@ export default async function NuevaPorraPage() {
             href="/"
             className="font-display text-trophy-300 hover:text-trophy-200 tracking-widest text-sm transition-colors"
           >
-            ← Volver al inicio
+            ← Hasierara itzuli
           </Link>
           <p className="font-display tracking-widest text-pitch-300 text-xs">
-            Nueva porra
+            Porra berria
           </p>
         </div>
       </header>

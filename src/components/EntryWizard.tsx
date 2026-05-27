@@ -91,7 +91,7 @@ export function EntryWizard({ teams, players, initial }: Props) {
         team.price;
       if (newTeamsCost + reservedForPlayer > BUDGET) {
         setErrorMsg(
-          `No te llega el presupuesto para añadir ${team.name} (se reserva ${reservedForPlayer}M€ para el goleador).`,
+          `Ez duzu nahikoa aurrekontu ${team.name} gehitzeko (${reservedForPlayer}M€ golegilearentzat gordetzen da).`,
         );
         return prev;
       }
@@ -104,7 +104,7 @@ export function EntryWizard({ teams, players, initial }: Props) {
     const player = presetPlayers.find((p) => p.id === playerId);
     if (!player) return;
     if (teamsCost + player.price > BUDGET) {
-      setErrorMsg(`No te llega el presupuesto para ${player.name}.`);
+      setErrorMsg(`Ez duzu nahikoa aurrekontu ${player.name} aukeratzeko.`);
       return;
     }
     setGoldenBootMode('preset');
@@ -206,11 +206,11 @@ export function EntryWizard({ teams, players, initial }: Props) {
             className="btn-ghost"
             disabled={isPending}
           >
-            ← Atrás
+            ← Atzera
           </button>
         ) : (
           <Link href="/" className="btn-ghost">
-            ← Cancelar
+            ← Utzi
           </Link>
         )}
 
@@ -220,14 +220,14 @@ export function EntryWizard({ teams, players, initial }: Props) {
             onClick={() => {
               if (step === 1 && step1Valid) setStep(2);
               else if (step === 2 && step2Valid) setStep(3);
-              else if (step === 1) setErrorMsg('Rellena tu nombre y el nombre del equipo.');
+              else if (step === 1) setErrorMsg('Bete zure izena eta taldearen izena.');
               else if (step === 2)
-                setErrorMsg(`Tienes que elegir exactamente ${TEAMS_TO_PICK} selecciones.`);
+                setErrorMsg(`Zehazki ${TEAMS_TO_PICK} selekzio aukeratu behar dituzu.`);
             }}
             className="btn-primary"
             disabled={isPending}
           >
-            Siguiente →
+            Hurrengoa →
           </button>
         ) : (
           <button
@@ -237,10 +237,10 @@ export function EntryWizard({ teams, players, initial }: Props) {
             className={cn('btn-primary', (!allValid || isPending) && 'opacity-50 cursor-not-allowed')}
           >
             {isPending
-              ? 'Guardando…'
+              ? 'Gordetzen…'
               : initial
-                ? 'Guardar cambios'
-                : 'Confirmar porra ⚽'}
+                ? 'Gorde aldaketak'
+                : 'Berretsi porra ⚽'}
           </button>
         )}
       </div>
@@ -271,7 +271,7 @@ function BudgetBar({
     <div className="sticky top-2 z-20 mt-6 panini-card p-4 backdrop-blur-md bg-pitch-900/85">
       <div className="flex items-center justify-between flex-wrap gap-2 mb-3">
         <p className="font-mono text-xs uppercase tracking-widest text-pitch-300">
-          Presupuesto
+          Aurrekontua
         </p>
         <p className={cn(
           'font-display tracking-wider text-lg',
@@ -304,15 +304,15 @@ function BudgetBar({
       </div>
 
       <div className="mt-3 flex items-center justify-between text-xs font-mono text-pitch-300 flex-wrap gap-2">
-        <span>Equipos: <span className="text-pitch-100">{teamsCost}M€</span></span>
+        <span>Taldeak: <span className="text-pitch-100">{teamsCost}M€</span></span>
         <span>
-          Goleador:{' '}
+          Golegilea:{' '}
           <span className="text-pitch-100">
-            {playerCost > 0 ? `${playerCost}M€` : `${MIN_GOLDEN_BOOT_COST}M€ reservado`}
+            {playerCost > 0 ? `${playerCost}M€` : `${MIN_GOLDEN_BOOT_COST}M€ gordeta`}
           </span>
         </span>
         <span className={overBudget ? 'text-red-400' : 'text-trophy-300'}>
-          Resto: <span className="font-semibold">{remaining}M€</span>
+          Gainerakoa: <span className="font-semibold">{remaining}M€</span>
         </span>
       </div>
     </div>
@@ -323,9 +323,9 @@ function BudgetBar({
 
 function Steps({ current, onJump }: { current: Step; onJump: (s: Step) => void }) {
   const items: { id: Step; label: string }[] = [
-    { id: 1, label: 'Tus datos' },
-    { id: 2, label: 'Selecciones' },
-    { id: 3, label: 'Bota de Oro' },
+    { id: 1, label: 'Zure datuak' },
+    { id: 2, label: 'Selekzioak' },
+    { id: 3, label: 'Urrezko Bota' },
   ];
   return (
     <div className="flex items-center justify-between gap-2 sm:gap-4">
@@ -383,28 +383,28 @@ function Step1({
   return (
     <div className="panini-card p-8">
       <h2 className="font-display text-3xl text-trophy-100 mb-2">
-        Preséntate
+        Aurkeztu zeure burua
       </h2>
       <p className="text-pitch-200 mb-8">
-        Dinos quién eres y cómo se va a llamar tu equipo de la porra. Algo épico,
-        si puede ser.
+        Esaguzu nor zaren eta zure porra-taldeak zer izen izango duen. Zerbait
+        epikoa, ahal bada.
       </p>
 
       <div className="space-y-6">
         <Field
-          label="Tu nombre"
-          hint="El que aparecerá en la clasificación"
+          label="Zure izena"
+          hint="Sailkapenean agertuko dena"
           value={participantName}
           onChange={onChangeParticipant}
-          placeholder="Ej. Pedro"
+          placeholder="Adib. Peru"
           maxLength={40}
         />
         <Field
-          label="Nombre del equipo"
-          hint="Sé creativo: Los Magnates del Balón, La Banda del Codo, etc."
+          label="Taldearen izena"
+          hint="Izan sortzailea: Baloiaren Nagusiak, Ukondoaren Koadrila, etab."
           value={teamName}
           onChange={onChangeTeamName}
-          placeholder="Ej. Los Magnates del Balón"
+          placeholder="Adib. Baloiaren Nagusiak"
           maxLength={40}
         />
       </div>
@@ -469,11 +469,11 @@ function Step2({
     let current: { range: string; teams: TeamForPicker[] } | null = null;
     for (const t of sorted) {
       const range =
-        t.price >= 40 ? 'Súper favoritos (40-45 M€)'
-        : t.price >= 30 ? 'Favoritos (30-35 M€)'
-        : t.price >= 15 ? 'Aspirantes (15-25 M€)'
-        : t.price >= 6 ? 'Outsiders (6-12 M€)'
-        : 'Tapados (2-5 M€)';
+        t.price >= 40 ? 'Faborito nagusiak (40-45 M€)'
+        : t.price >= 30 ? 'Faboritoak (30-35 M€)'
+        : t.price >= 15 ? 'Aspiranteak (15-25 M€)'
+        : t.price >= 6 ? 'Outsiderrak (6-12 M€)'
+        : 'Ezustekoak (2-5 M€)';
       if (!current || current.range !== range) {
         current = { range, teams: [] };
         groups.push(current);
@@ -489,18 +489,18 @@ function Step2({
         <div className="flex items-baseline justify-between flex-wrap gap-2">
           <div>
             <h2 className="font-display text-3xl text-trophy-100">
-              Elige tus 5 selecciones
+              Aukeratu zure 5 selekzioak
             </h2>
             <p className="text-pitch-200 text-sm mt-1">
-              Llevas {selectedTeamIds.length} de {TEAMS_TO_PICK} elegidas. Puedes
-              gastar hasta {MAX_TEAMS_BUDGET}M€ en equipos (se reserva 1M€ para el
-              goleador).
+              {selectedTeamIds.length} / {TEAMS_TO_PICK} aukeratuta. Gehienez{' '}
+              {MAX_TEAMS_BUDGET}M€ gasta ditzakezu taldeetan (1M€ golegilearentzat
+              gordetzen da).
             </p>
           </div>
           <p className="font-mono text-xs text-pitch-300">
             {playerCost > 0
-              ? <>Goleador: <span className="text-pitch-100">{playerCost}M€</span></>
-              : <>Reservado para goleador: <span className="text-pitch-100">{MIN_GOLDEN_BOOT_COST}M€</span></>}
+              ? <>Golegilea: <span className="text-pitch-100">{playerCost}M€</span></>
+              : <>Golegilerako gordeta: <span className="text-pitch-100">{MIN_GOLDEN_BOOT_COST}M€</span></>}
           </p>
         </div>
       </div>
@@ -608,9 +608,9 @@ function Step3({
     let current: { range: string; players: PlayerForPicker[] } | null = null;
     for (const p of sorted) {
       const range =
-        p.price === 10 ? 'Favoritos (10 M€)'
-        : p.price === 5 ? 'Segunda línea (5 M€)'
-        : 'Resto (2 M€)';
+        p.price === 10 ? 'Faboritoak (10 M€)'
+        : p.price === 5 ? 'Bigarren maila (5 M€)'
+        : 'Gainerakoak (2 M€)';
       if (!current || current.range !== range) {
         current = { range, players: [] };
         groups.push(current);
@@ -624,11 +624,11 @@ function Step3({
     <div>
       <div className="panini-card p-6 mb-6">
         <h2 className="font-display text-3xl text-trophy-100">
-          Elige tu Bota de Oro
+          Aukeratu zure Urrezko Bota
         </h2>
         <p className="text-pitch-200 text-sm mt-1">
-          El jugador al que apuestas como máximo goleador del Mundial. 3 puntos
-          por cada gol que marque, +4 si gana la Bota de Oro.
+          Mundialeko golegile nagusi izango dela uste duzun jokalaria. 3 puntu
+          sartzen duen gol bakoitzeko, eta +4 Urrezko Bota irabazten badu.
         </p>
       </div>
 
@@ -666,7 +666,7 @@ function Step3({
                       {p.name}
                     </span>
                     <span className="block text-xs text-pitch-300 mt-0.5">
-                      {p.teamName ?? 'Sin equipo'}
+                      {p.teamName ?? 'Talderik gabe'}
                     </span>
                   </span>
                   <span className={cn(
@@ -686,7 +686,7 @@ function Step3({
       <section>
         <div className="flex items-center gap-3 mb-3">
           <h3 className="font-display text-trophy-300 text-sm tracking-widest">
-            ¿Tienes una corazonada? (1 M€)
+            Usteren bat duzu? (1 M€)
           </h3>
           <div className="flex-1 h-px bg-pitch-800" />
         </div>
@@ -705,10 +705,10 @@ function Step3({
             />
             <span className="flex-1">
               <span className="block font-display text-pitch-50 text-lg">
-                Otro jugador
+                Beste jokalari bat
               </span>
               <span className="block text-sm text-pitch-300 mt-0.5 mb-3">
-                Escribe el nombre del jugador que crees que va a destacar (1M€)
+                Idatzi nabarmenduko dela uste duzun jokalariaren izena (1M€)
               </span>
               <input
                 type="text"
@@ -718,7 +718,7 @@ function Step3({
                   onChangeCustomName(e.target.value);
                 }}
                 onFocus={onSelectCustom}
-                placeholder="Ej. Pedri, Nico Williams, Florian Wirtz…"
+                placeholder="Adib. Pedri, Nico Williams, Florian Wirtz…"
                 maxLength={50}
                 className="w-full bg-pitch-950 border border-pitch-700 focus:border-trophy-500
                   focus:ring-2 focus:ring-trophy-700/30 outline-none rounded-sm px-4 py-2.5
