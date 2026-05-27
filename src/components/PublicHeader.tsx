@@ -17,7 +17,7 @@ export function PublicHeader({ active }: { active?: Section }) {
         <Link href="/" className="flex items-center gap-2 group shrink-0" aria-label="Hasiera">
           <TrophyMark />
           <span className="font-display text-trophy-50 text-lg leading-none tracking-wider group-hover:text-trophy-200 transition-colors hidden sm:inline">
-            La Porra <span className="text-trophy-300">2026</span>
+            Salabardoak Porra Mundiala <span className="text-trophy-300">2026</span>
           </span>
         </Link>
         <nav className="flex items-center gap-0.5 sm:gap-1 text-xs sm:text-sm font-display uppercase tracking-wider overflow-x-auto">

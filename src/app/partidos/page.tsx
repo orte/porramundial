@@ -80,7 +80,7 @@ export default async function PartidosPage({
         <div className="mb-6">
           <h1 className="font-display text-trophy-50 text-5xl sm:text-6xl">Partidak</h1>
           <p className="text-pitch-200 mt-2">
-            Mundial 2026ko egutegi osoa. Ordutegiak Espainiako penintsulako orduan.
+            Mundialeko egutegi osoa. Ordutegiak Espainiako penintsulako orduan.
           </p>
         </div>
 

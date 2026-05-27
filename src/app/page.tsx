@@ -65,10 +65,10 @@ export default async function HomePage({ searchParams }: HomeProps) {
             <TrophyMark />
             <div>
               <p className="font-display text-trophy-300 text-sm leading-none tracking-widest">
-                La Porra
+                Salabardoak
               </p>
               <p className="font-display text-trophy-50 text-lg leading-none tracking-wider">
-                Mundial 2026
+                Porra Mundiala 2026
               </p>
             </div>
           </div>
@@ -113,11 +113,11 @@ export default async function HomePage({ searchParams }: HomeProps) {
             </div>
 
             <h1 className="font-display text-trophy-50 leading-[0.9] text-6xl sm:text-7xl md:text-8xl">
-              Altxa
+              Jokatu
               <br />
-              <span className="text-trophy-300">garaikurra</span>
+              <span className="text-trophy-300">eta</span>
               <br />
-              lagunekin.
+              irabazi.
             </h1>
 
             <p className="mt-8 text-pitch-100 text-lg max-w-xl leading-relaxed">
@@ -195,17 +195,17 @@ export default async function HomePage({ searchParams }: HomeProps) {
           <StepCard
             number="01"
             title="Fitxatu 5 selekzio"
-            description="100M€ko aurrekontuarekin. Espainia eta Frantzia dira garestienak (45M€). Faborito gutxien direnak, 2M€tik aurrera."
+            description="100M€ko aurrekontua daukazu zure aukeraketa egiteko"
           />
           <StepCard
             number="02"
             title="Aukeratu zure Urrezko Bota"
-            description="20 hautagai, 10M€ eta 2M€ arteko prezioekin. Usteren bat duzu? «Beste bat» aukera dago 1M€an."
+            description="20 hautagai, 10M€ eta 2M€ arteko prezioekin. Zerrendan agertzen ez diren jokalari bat aukeratu dezakezu 1M€ean."
           />
           <StepCard
             number="03"
-            title="Batu puntuak egunero"
-            description="Garaipenak, golak, multzoko lehen postua, kanporaketak, Urrezko Bota… Dena zenbatzen da."
+            title="Puntuak egunero batzen dira"
+            description="Garaipenak, golak, multzoko lehen postua, kanporaketak, Urrezko Bota…"
           />
         </div>
       </section>
@@ -221,7 +221,7 @@ export default async function HomePage({ searchParams }: HomeProps) {
           </div>
 
           <h2 className="font-display text-3xl text-trophy-100 mb-8">
-            Nola batzen diren puntuak
+            Nola batzen dira puntuak?
           </h2>
 
           <div className="grid md:grid-cols-2 gap-x-12 gap-y-3 text-pitch-100">
@@ -241,7 +241,7 @@ export default async function HomePage({ searchParams }: HomeProps) {
       {/* ─── FOOTER ─────────────────────────────────────────────────── */}
       <footer className="border-t border-pitch-800/50 mt-16">
         <div className="max-w-6xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-pitch-300">
-          <p className="font-mono">© 2026 · Lagun arteko porra</p>
+          <p className="font-mono">© 2026 · Salabardoak S.L.</p>
           <p className="font-mono text-trophy-700">
             <Link href="/admin" className="hover:text-trophy-400">
               admin
