@@ -18,7 +18,7 @@
     "clsx": "^2.1.1",
     "country-flag-emoji-polyfill": "^0.1.8",
     "drizzle-orm": "^0.36.4",
-    "next": "15.0.3",
+    "next": "15.0.7",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "tailwind-merge": "^2.5.5"
