@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Bebas_Neue, Source_Sans_3, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
+import { FlagPolyfill } from '@/components/FlagPolyfill';
 
 const display = Bebas_Neue({
   weight: '400',
@@ -33,7 +34,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="eu" className={`${display.variable} ${body.variable} ${mono.variable}`}>
-      <body className="min-h-screen relative">{children}</body>
+      <body className="min-h-screen relative">
+        <FlagPolyfill />
+        {children}
+      </body>
     </html>
   );
 }
