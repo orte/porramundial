@@ -2,10 +2,10 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { ADMIN_COOKIE, verifySessionToken } from '@/lib/admin-auth';
 
 /**
- * Protege todo lo que cuelga de /admin salvo /admin/login. Si no hay sesión
- * válida, redirige al login.
+ * Proxy (antes "middleware"; renombrado en Next 16). Protege todo lo que cuelga
+ * de /admin salvo /admin/login. Si no hay sesión válida, redirige al login.
  */
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   if (pathname === '/admin/login') {

@@ -328,7 +328,7 @@ function BadgePoster() {
             </p>
             <div className="my-6 w-12 h-px bg-trophy-400" />
             <p className="font-display text-trophy-300 text-xs tracking-[0.3em]">
-              UNITED · 2026
+              ESTATU BATUAK, KANADA ETA MEXIKO · 2026
             </p>
             <div className="mt-8 flex items-center gap-2 text-2xl">
               <span>🇺🇸</span>
