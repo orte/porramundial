@@ -1,4 +1,7 @@
+# pnpm 11: autoriza los build-scripts de estas dependencias para que
+# `pnpm install` salga con código 0. Next 16 valida las dependencias (corre
+# `pnpm install`) antes de `build`, y pnpm 11 falla si hay scripts sin aprobar.
 allowBuilds:
-  esbuild: set this to true or false
-  sharp: set this to true or false
-  unrs-resolver: set this to true or false
+  esbuild: true
+  sharp: true
+  unrs-resolver: true
