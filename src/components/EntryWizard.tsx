@@ -383,11 +383,10 @@ function Step1({
   return (
     <div className="panini-card p-8">
       <h2 className="font-display text-3xl text-trophy-100 mb-2">
-        Aurkeztu zeure burua
+        Porra berria sortu
       </h2>
       <p className="text-pitch-200 mb-8">
-        Esaguzu nor zaren eta zure porra-taldeak zer izen izango duen. Zerbait
-        epikoa, ahal bada.
+        Sartu zure izena eta jarri izen bat zure taldeari.
       </p>
 
       <div className="space-y-6">
@@ -396,15 +395,15 @@ function Step1({
           hint="Sailkapenean agertuko dena"
           value={participantName}
           onChange={onChangeParticipant}
-          placeholder="Adib. Peru"
+          placeholder="Adib. Txalupin"
           maxLength={40}
         />
         <Field
           label="Taldearen izena"
-          hint="Izan sortzailea: Baloiaren Nagusiak, Ukondoaren Koadrila, etab."
+          hint="Sormen pixka bat jarrita, hobe"
           value={teamName}
           onChange={onChangeTeamName}
-          placeholder="Adib. Baloiaren Nagusiak"
+          placeholder="Adib. Aston Barrabilak"
           maxLength={40}
         />
       </div>
