@@ -8,6 +8,9 @@ import { BUDGET, MAX_TEAMS_BUDGET, MIN_GOLDEN_BOOT_COST, TEAMS_TO_PICK } from '@
 import { createEntry, updateEntry, type EntryFormInput } from '@/app/actions/entry';
 import type { PlayerForPicker, TeamForPicker } from '@/lib/queries';
 
+/** Validación básica de formato de email (defensa en cliente; el servidor revalida). */
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 type Props = {
   teams: TeamForPicker[];
   players: PlayerForPicker[];
@@ -18,6 +21,7 @@ type Props = {
     participantName: string;
     teamName: string;
     selectedTeamIds: number[];
+    email: string;
     goldenBoot:
       | { type: 'preset'; playerId: number }
       | { type: 'custom'; name: string };
@@ -32,6 +36,7 @@ export function EntryWizard({ teams, players, initial }: Props) {
   const [step, setStep] = useState<Step>(1);
   const [participantName, setParticipantName] = useState(initial?.participantName ?? '');
   const [teamName, setTeamName] = useState(initial?.teamName ?? '');
+  const [email, setEmail] = useState(initial?.email ?? '');
   const [selectedTeamIds, setSelectedTeamIds] = useState<number[]>(
     initial?.selectedTeamIds ?? [],
   );
@@ -68,7 +73,9 @@ export function EntryWizard({ teams, players, initial }: Props) {
   const overBudget = remaining < 0;
 
   // Habilitación de pasos
-  const step1Valid = participantName.trim().length >= 2 && teamName.trim().length >= 2;
+  const emailValid = EMAIL_REGEX.test(email.trim());
+  const step1Valid =
+    participantName.trim().length >= 2 && teamName.trim().length >= 2 && emailValid;
   const step2Valid = selectedTeamIds.length === TEAMS_TO_PICK && teamsCost <= MAX_TEAMS_BUDGET;
   const step3Valid =
     (goldenBootMode === 'preset' && goldenBootPlayerId !== null) ||
@@ -116,6 +123,7 @@ export function EntryWizard({ teams, players, initial }: Props) {
     const input: EntryFormInput = {
       participantName: participantName.trim(),
       teamName: teamName.trim(),
+      email: email.trim(),
       selectedTeamIds,
       goldenBootChoice:
         goldenBootMode === 'preset' && goldenBootPlayerId !== null
@@ -159,8 +167,11 @@ export function EntryWizard({ teams, players, initial }: Props) {
           <Step1
             participantName={participantName}
             teamName={teamName}
+            email={email}
+            emailValid={emailValid}
             onChangeParticipant={setParticipantName}
             onChangeTeamName={setTeamName}
+            onChangeEmail={setEmail}
           />
         )}
 
@@ -220,7 +231,8 @@ export function EntryWizard({ teams, players, initial }: Props) {
             onClick={() => {
               if (step === 1 && step1Valid) setStep(2);
               else if (step === 2 && step2Valid) setStep(3);
-              else if (step === 1) setErrorMsg('Bete zure izena eta taldearen izena.');
+              else if (step === 1)
+                setErrorMsg('Bete zure izena, taldearen izena eta baliozko email bat.');
               else if (step === 2)
                 setErrorMsg(`Zehazki ${TEAMS_TO_PICK} selekzio aukeratu behar dituzu.`);
             }}
@@ -372,13 +384,19 @@ function Steps({ current, onJump }: { current: Step; onJump: (s: Step) => void }
 function Step1({
   participantName,
   teamName,
+  email,
+  emailValid,
   onChangeParticipant,
   onChangeTeamName,
+  onChangeEmail,
 }: {
   participantName: string;
   teamName: string;
+  email: string;
+  emailValid: boolean;
   onChangeParticipant: (v: string) => void;
   onChangeTeamName: (v: string) => void;
+  onChangeEmail: (v: string) => void;
 }) {
   return (
     <div className="panini-card p-8">
@@ -386,7 +404,7 @@ function Step1({
         Porra berria sortu
       </h2>
       <p className="text-pitch-200 mb-8">
-        Sartu zure izena eta jarri izen bat zure taldeari.
+        Sartu zure izena, jarri izen bat zure taldeari eta utzi zure emaila.
       </p>
 
       <div className="space-y-6">
@@ -406,6 +424,16 @@ function Step1({
           placeholder="Adib. Aston Barrabilak"
           maxLength={40}
         />
+        <Field
+          label="Emaila"
+          hint="Hona bidaliko dizugu zure porra editatzeko esteka. Ez da inon publikoki erakutsiko."
+          value={email}
+          onChange={onChangeEmail}
+          placeholder="adib. zu@email.eus"
+          maxLength={120}
+          type="email"
+          error={email.trim().length > 0 && !emailValid ? 'Email helbidea ez da baliozkoa.' : undefined}
+        />
       </div>
     </div>
   );
@@ -418,6 +446,8 @@ function Field({
   onChange,
   placeholder,
   maxLength,
+  type = 'text',
+  error,
 }: {
   label: string;
   hint?: string;
@@ -425,6 +455,8 @@ function Field({
   onChange: (v: string) => void;
   placeholder?: string;
   maxLength?: number;
+  type?: 'text' | 'email';
+  error?: string;
 }) {
   return (
     <label className="block">
@@ -435,15 +467,22 @@ function Field({
         <span className="block text-pitch-300 text-xs mt-0.5 mb-2">{hint}</span>
       )}
       <input
-        type="text"
+        type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         maxLength={maxLength}
-        className="mt-2 w-full bg-pitch-950 border border-pitch-700 focus:border-trophy-500
-          focus:ring-2 focus:ring-trophy-700/30 outline-none rounded-sm px-4 py-3
-          text-pitch-50 placeholder:text-pitch-500 font-display tracking-wide text-xl"
+        className={cn(
+          `mt-2 w-full bg-pitch-950 border focus:ring-2 outline-none rounded-sm px-4 py-3
+          text-pitch-50 placeholder:text-pitch-500 font-display tracking-wide text-xl`,
+          error
+            ? 'border-red-700/70 focus:border-red-500 focus:ring-red-700/30'
+            : 'border-pitch-700 focus:border-trophy-500 focus:ring-trophy-700/30',
+        )}
       />
+      {error && (
+        <span className="block text-red-300 text-xs mt-1.5">{error}</span>
+      )}
     </label>
   );
 }

@@ -98,6 +98,11 @@ export const entries = pgTable('entries', {
   id: serial('id').primaryKey(),
   participantName: text('participant_name').notNull(), // nombre persona
   teamName: text('team_name').notNull(), // nombre del equipo de la porra
+  // Email del participante: se usa solo para enviarle el enlace mágico de
+  // edición. Nunca se muestra en vistas públicas. default('') solo rellena las
+  // filas que ya existían antes de añadir la columna; las porras nuevas
+  // siempre traen un email validado en la server action.
+  email: text('email').notNull().default(''),
   editToken: text('edit_token').notNull(), // token para editar antes del bloqueo
   goldenBootPlayerId: integer('golden_boot_player_id')
     .notNull()

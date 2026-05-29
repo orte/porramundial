@@ -67,6 +67,7 @@ export default async function PorraDetailPage({ params, searchParams }: Props) {
             editToken: entry.editToken,
             participantName: entry.participantName,
             teamName: entry.teamName,
+            email: entry.email,
             selectedTeamIds: entry.teams.map((t) => t.id),
             goldenBoot: initialGoldenBoot,
           }}
@@ -210,6 +211,13 @@ export default async function PorraDetailPage({ params, searchParams }: Props) {
             <code className="block bg-pitch-950 border border-pitch-700 rounded-sm px-3 py-2 text-xs text-trophy-200 font-mono break-all">
               /porra/{entry.id}?token={entry.editToken}
             </code>
+            {entry.email && (
+              <p className="text-pitch-300 text-sm mt-3">
+                Kopia bat bidali dugu{' '}
+                <span className="text-trophy-300">{entry.email}</span> helbidera.
+                Iristen ez bazaizu, begiratu spam karpetan.
+              </p>
+            )}
           </div>
         )}
       </div>

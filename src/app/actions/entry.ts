@@ -16,12 +16,19 @@ import {
   MIN_TEAM_NAME,
   TEAMS_TO_PICK,
 } from '@/lib/constants';
-import { isLocked } from '@/lib/lock';
+import { getLockDate, isLocked } from '@/lib/lock';
 import { generateEditToken } from '@/lib/token';
+import { getEntryById } from '@/lib/queries-entry';
+import { sendEntryEmail } from '@/lib/email';
+
+/** Validación básica de formato de email (defensa en profundidad; el cliente ya valida). */
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const MAX_EMAIL = 120;
 
 export type EntryFormInput = {
   participantName: string;
   teamName: string;
+  email: string;
   selectedTeamIds: number[];
   goldenBootChoice:
     | { type: 'preset'; playerId: number }
@@ -50,6 +57,13 @@ function validateInput(input: EntryFormInput): string | null {
   if (team.length > MAX_TEAM_NAME) {
     return `Taldearen izenak ezin ditu ${MAX_TEAM_NAME} karaktere baino gehiago izan.`;
   }
+  const email = input.email?.trim();
+  if (!email || !EMAIL_REGEX.test(email)) {
+    return 'Email helbide baliozko bat sartu behar duzu.';
+  }
+  if (email.length > MAX_EMAIL) {
+    return `Emailak ezin ditu ${MAX_EMAIL} karaktere baino gehiago izan.`;
+  }
   if (!Array.isArray(input.selectedTeamIds) || input.selectedTeamIds.length !== TEAMS_TO_PICK) {
     return `Zehazki ${TEAMS_TO_PICK} selekzio aukeratu behar dituzu.`;
   }
@@ -72,6 +86,55 @@ function validateInput(input: EntryFormInput): string | null {
   }
 
   return null;
+}
+
+// ─── EMAIL (no debe romper la creación/edición) ───────────────────────────
+
+/** URL base del sitio para construir el enlace mágico absoluto. */
+function siteBaseUrl(): string {
+  return (process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000').replace(/\/$/, '');
+}
+
+/**
+ * Envía el email de confirmación/actualización reutilizando los datos ya
+ * formateados de la porra. CRÍTICO: cualquier fallo se loguea pero NO se
+ * propaga — la porra ya está guardada y el email es solo un extra.
+ */
+async function sendEntryEmailSafe(
+  entryId: number,
+  editToken: string,
+  email: string,
+  isUpdate: boolean,
+): Promise<void> {
+  try {
+    const detail = await getEntryById(entryId);
+    if (!detail) return;
+    const lockDate = await getLockDate();
+    await sendEntryEmail({
+      to: email,
+      participantName: detail.participantName,
+      teamName: detail.teamName,
+      teams: detail.teams.map((t) => ({
+        name: t.name,
+        flag: t.flag,
+        price: t.price,
+        groupCode: t.groupCode,
+      })),
+      goldenBoot: {
+        name: detail.goldenBoot.name,
+        isCustom: detail.goldenBoot.isCustom,
+        teamFlag: detail.goldenBoot.teamFlag,
+        teamName: detail.goldenBoot.teamName,
+        price: detail.goldenBoot.price,
+      },
+      totalSpent: detail.totalSpent,
+      magicLink: `${siteBaseUrl()}/porra/${entryId}?token=${editToken}`,
+      lockDate,
+      isUpdate,
+    });
+  } catch (err) {
+    console.error(`Error enviando email de porra ${entryId}:`, err);
+  }
 }
 
 // ─── CREATE ──────────────────────────────────────────────────────────────
@@ -157,6 +220,7 @@ export async function createEntry(input: EntryFormInput): Promise<ActionResult> 
     .values({
       participantName: input.participantName.trim(),
       teamName: input.teamName.trim(),
+      email: input.email.trim(),
       editToken,
       goldenBootPlayerId,
       totalSpent,
@@ -189,6 +253,9 @@ export async function createEntry(input: EntryFormInput): Promise<ActionResult> 
 
   revalidatePath('/');
   revalidatePath('/clasificacion');
+
+  // Email de confirmación (no bloquea ni rompe la creación si falla).
+  await sendEntryEmailSafe(entry.id, editToken, input.email.trim(), false);
 
   return { ok: true, entryId: entry.id, editToken };
 }
@@ -298,6 +365,7 @@ export async function updateEntry(
     .set({
       participantName: input.participantName.trim(),
       teamName: input.teamName.trim(),
+      email: input.email.trim(),
       goldenBootPlayerId,
       totalSpent,
       updatedAt: new Date(),
@@ -312,6 +380,9 @@ export async function updateEntry(
 
   revalidatePath(`/porra/${entryId}`);
   revalidatePath('/clasificacion');
+
+  // Email de "porra actualizada" (no bloquea ni rompe la edición si falla).
+  await sendEntryEmailSafe(entryId, editToken, input.email.trim(), true);
 
   return { ok: true, entryId, editToken };
 }
