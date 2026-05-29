@@ -235,6 +235,13 @@ export default async function HomePage({ searchParams }: HomeProps) {
             <ScoringLine pts="+3" text="Zure Urrezko Bota hautagaiaren gol bakoitzeko" />
             <ScoringLine pts="+4" text="Zure hautagaia Urrezko Bota bada" />
           </div>
+
+          <p className="mt-8 pt-6 border-t border-trophy-700/40 text-sm text-pitch-300">
+            Kanporaketa batean 90 minututan irabazitako partida batek +4 puntu
+            emango ditu (+2 90 minututan irabazitako partidagatik eta +2
+            kanporaketan aurrera egiteagatik). Prorroga edo penaltietan
+            irabazita, +2 puntu izango dira soilik.
+          </p>
         </div>
       </section>
 

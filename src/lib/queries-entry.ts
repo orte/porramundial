@@ -6,6 +6,8 @@ export type EntryWithDetails = {
   id: number;
   participantName: string;
   teamName: string;
+  /** Privado: solo se usa para el email de edición y se muestra únicamente al dueño. */
+  email: string;
   totalSpent: number;
   points: number;
   editToken: string;
@@ -71,6 +73,7 @@ export async function getEntryById(id: number): Promise<EntryWithDetails | null>
     id: entry.id,
     participantName: entry.participantName,
     teamName: entry.teamName,
+    email: entry.email,
     totalSpent: entry.totalSpent,
     points: entry.points,
     editToken: entry.editToken,
