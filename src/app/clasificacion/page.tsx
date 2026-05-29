@@ -8,13 +8,18 @@ import {
 } from '@/lib/queries-public';
 import { stageLabelEu } from '@/lib/stages';
 import { formatPoints } from '@/lib/format';
+import { isLocked } from '@/lib/lock';
 import { cn } from '@/lib/cn';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Sailkapena · Porra Mundial 2026' };
 
 export default async function ClasificacionPage() {
-  const [rows, status] = await Promise.all([getStandings(), getTournamentStatus()]);
+  const [rows, status, locked] = await Promise.all([
+    getStandings(),
+    getTournamentStatus(),
+    isLocked(),
+  ]);
   const leader = rows[0] ?? null;
 
   return (
@@ -37,7 +42,7 @@ export default async function ClasificacionPage() {
           </div>
         ) : (
           <>
-            {leader && <LeaderCard leader={leader} />}
+            {leader && <LeaderCard leader={leader} locked={locked} />}
 
             <div className="panini-card overflow-hidden">
               <table className="w-full">
@@ -59,7 +64,7 @@ export default async function ClasificacionPage() {
                 </thead>
                 <tbody>
                   {rows.map((row, idx) => (
-                    <StandingTr key={row.id} row={row} position={idx + 1} />
+                    <StandingTr key={row.id} row={row} position={idx + 1} locked={locked} />
                   ))}
                 </tbody>
               </table>
@@ -75,19 +80,33 @@ export default async function ClasificacionPage() {
   );
 }
 
-function LeaderCard({ leader }: { leader: StandingRow }) {
+function LeaderCard({ leader, locked }: { leader: StandingRow; locked: boolean }) {
+  const inner = (
+    <>
+      <p className="font-mono text-xs uppercase tracking-widest text-trophy-300">Liderra</p>
+      <p
+        className={cn(
+          'font-display text-trophy-50 text-2xl sm:text-3xl leading-none truncate transition-colors',
+          locked && 'group-hover:text-trophy-200',
+        )}
+      >
+        {leader.teamName}
+      </p>
+      <p className="text-pitch-200 text-sm mt-0.5">{leader.participantName}</p>
+    </>
+  );
   return (
     <div className="panini-card-accent p-6 mb-8 flex items-center gap-5">
       <div className="w-14 h-14 rounded-full border-2 border-trophy-400 flex items-center justify-center shrink-0">
         <TrophyMark />
       </div>
-      <Link href={`/porra/${leader.id}`} className="flex-1 min-w-0 group">
-        <p className="font-mono text-xs uppercase tracking-widest text-trophy-300">Liderra</p>
-        <p className="font-display text-trophy-50 text-2xl sm:text-3xl leading-none truncate group-hover:text-trophy-200 transition-colors">
-          {leader.teamName}
-        </p>
-        <p className="text-pitch-200 text-sm mt-0.5">{leader.participantName}</p>
-      </Link>
+      {locked ? (
+        <Link href={`/porra/${leader.id}`} className="flex-1 min-w-0 group">
+          {inner}
+        </Link>
+      ) : (
+        <div className="flex-1 min-w-0">{inner}</div>
+      )}
       <div className="text-right shrink-0">
         <p className="font-display text-trophy-100 text-4xl sm:text-5xl leading-none tabular-nums">
           {formatPoints(leader.points)}
@@ -98,8 +117,29 @@ function LeaderCard({ leader }: { leader: StandingRow }) {
   );
 }
 
-function StandingTr({ row, position }: { row: StandingRow; position: number }) {
+function StandingTr({
+  row,
+  position,
+  locked,
+}: {
+  row: StandingRow;
+  position: number;
+  locked: boolean;
+}) {
   const topThree = position <= 3;
+  const inner = (
+    <>
+      <p
+        className={cn(
+          'font-display text-pitch-50 text-lg leading-tight transition-colors',
+          locked && 'group-hover:text-trophy-200',
+        )}
+      >
+        {row.teamName}
+      </p>
+      <p className="text-pitch-300 text-xs">{row.participantName}</p>
+    </>
+  );
   return (
     <tr className="border-b border-pitch-800 last:border-0 hover:bg-pitch-800/40">
       <td
@@ -111,20 +151,25 @@ function StandingTr({ row, position }: { row: StandingRow; position: number }) {
         {position}
       </td>
       <td className="px-4 py-3">
-        <Link href={`/porra/${row.id}`} className="block group">
-          <p className="font-display text-pitch-50 text-lg leading-tight group-hover:text-trophy-200 transition-colors">
-            {row.teamName}
-          </p>
-          <p className="text-pitch-300 text-xs">{row.participantName}</p>
-        </Link>
+        {locked ? (
+          <Link href={`/porra/${row.id}`} className="block group">
+            {inner}
+          </Link>
+        ) : (
+          <div className="block">{inner}</div>
+        )}
       </td>
       <td className="px-4 py-3 hidden sm:table-cell">
-        <span className="flex items-center gap-2 text-sm">
-          <span aria-hidden>{row.goldenBootFlag ?? '⚽'}</span>
-          <span className="text-pitch-200 truncate">{row.goldenBootName}</span>
-          {row.goldenBootIsWinner && <span className="tag-accent text-[9px]">Bota</span>}
-          <span className="font-mono text-xs text-pitch-400">· {row.goldenBootGoals}g</span>
-        </span>
+        {locked ? (
+          <span className="flex items-center gap-2 text-sm">
+            <span aria-hidden>{row.goldenBootFlag ?? '⚽'}</span>
+            <span className="text-pitch-200 truncate">{row.goldenBootName}</span>
+            {row.goldenBootIsWinner && <span className="tag-accent text-[9px]">Bota</span>}
+            <span className="font-mono text-xs text-pitch-400">· {row.goldenBootGoals}g</span>
+          </span>
+        ) : (
+          <span className="text-sm text-pitch-400 italic">Ezezaguna</span>
+        )}
       </td>
       <td className="px-4 py-3 text-right font-display text-trophy-100 text-2xl tabular-nums">
         {formatPoints(row.points)}
